@@ -1,6 +1,6 @@
 {
-	"database-id": "169b6e632b7448529120599281265ac5",
-	"author": "",
+	"database-id": "9e42940df85145fc9d89d7f084bd1353",
+	"author": "Viceroy",
 	"tracking": {
 		"google-analytics": {
 			"use-ga": true,
@@ -29,15 +29,14 @@
 		"bluesky": "",
 		"calendar": "",
 		"kofi": "",
-		"buy-me-a-coffee": "",
-		"this-github-repo": "https://github.com/nerdymomocat-templates/webtrotion-astro-notion-cms-website-blog"
+		"buy-me-a-coffee": ""
 	},
 	"custom-domain": "",
 	"base-path": "",
 	"giscus": {
-		"data-repo": "nerdymomocat-templates/webtrotion-astro-notion-cms-website-blog",
+		"data-repo": "viceroyliu/astro-notion-blog",
 		"data-repo-id": "R_kgDOK0FuUA",
-		"data-category": "Announcements",
+		"data-category": "General",
 		"data-category-id": "DIC_kwDOK0FuUM4CbZ5A",
 		"data-mapping": "pathname",
 		"data-input-position": "top",
