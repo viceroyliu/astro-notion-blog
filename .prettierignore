@@ -9,3 +9,6 @@ dist
 
 # because i want global css output to look good
 src/integrations/theme-constants-to-css.ts
+
+# 默认全部保持双引号的key
+constants-config.ts

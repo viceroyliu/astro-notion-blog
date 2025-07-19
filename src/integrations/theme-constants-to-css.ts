@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import type { AstroIntegration } from "astro";
-import config from "../../constants-config.json";
+import config from "../../constants-config.ts";
 const key_value_from_json = { ...config };
 const theme_config = key_value_from_json["theme"];
 

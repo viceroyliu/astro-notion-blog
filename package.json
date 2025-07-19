@@ -40,6 +40,7 @@
 		"metascraper-image": "^5.45.27",
 		"metascraper-title": "^5.45.25",
 		"metascraper-url": "^5.45.25",
+		"pinyin-pro": "^3.26.0",
 		"png-to-ico": "^2.1.8",
 		"sanitize-html": "^2.13.1",
 		"satori-html": "^0.3.2",

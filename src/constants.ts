@@ -1,4 +1,4 @@
-import config from "../constants-config.json";
+import config from "../constants-config.ts";
 const key_value_from_json = { ...config };
 
 import fs from "fs";

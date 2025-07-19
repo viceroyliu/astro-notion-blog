@@ -34,7 +34,7 @@ import rssContentEnhancer from "./src/integrations/rss-content-enhancer";
 import CSSWriter from "./src/integrations/theme-constants-to-css";
 import createFoldersIfMissing from "./src/integrations/create-folders-if-missing";
 import robotsTxt from "astro-robots-txt";
-import config from "./constants-config.json";
+import config from "./constants-config.ts";
 import partytown from "@astrojs/partytown";
 const key_value_from_json = {
 	...config,

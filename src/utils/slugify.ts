@@ -3,6 +3,9 @@
  * git+https://github.com/danielhaim1/slugify.git
  * Copyright (c) 2024 Daniel Haim, Licensed MIT
  */
+import { pinyin } from "pinyin-pro";
+import { HOME_PAGE_SLUG } from "../constants";
+
 const defaultReplacements = [
 	["ß", "ss"],
 	["ẞ", "Ss"],
@@ -1950,10 +1953,28 @@ function escapeRegExp(string) {
 	return string.replace(/[|\\{}()[\]^$+*?.]/g, "\\$&").replace(/-/g, "\\x2d");
 }
 
-export function slugify(string, replacements = defaultReplacements, separator = "-") {
+// 修改 slugify 函数
+export function slugify(string: string, replacements = defaultReplacements, separator = "-") {
 	try {
 		let slug = string.toString().trim();
 
+		// 特殊处理：如果是主页，保持原样不转换
+		if (slug === HOME_PAGE_SLUG) {
+			return slug; // 返回原始值，不进行任何转换
+		}
+		// 检测是否包含中文字符
+		const hasChinese = /[\u4e00-\u9fa5]/.test(slug);
+
+		if (hasChinese) {
+			// 如果包含中文，先转换为拼音
+			slug = pinyin(slug, {
+				toneType: "none", // 不带声调
+				separator: " ", // 用空格分隔
+				nonZh: "consecutive", // 保持非中文字符
+			});
+		}
+
+		// 继续原有的替换逻辑
 		replacements.forEach(([oldValue, newValue]) => {
 			slug = slug.replace(new RegExp(escapeRegExp(oldValue), "g"), newValue);
 		});

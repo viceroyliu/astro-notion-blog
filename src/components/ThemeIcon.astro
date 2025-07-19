@@ -12,16 +12,6 @@ const { order = 0 } = Astro.props;
 		aria-label="Toggle Theme"
 	>
 		<Icon
-			class="absolute top-1/2 left-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-data-[theme=system]:scale-100 group-data-[theme=system]:opacity-100"
-			name={"theme-system"}
-			aria-label="Use System Theme"
-			id="system-svg"
-			stroke="currentColor"
-			fill="none"
-			stroke-width="1.5"
-			stroke-linecap="round"
-		/>
-		<Icon
 			class="absolute top-1/2 left-1/2 h-7 w-7 -translate-x-1/2 -translate-y-1/2 scale-0 opacity-0 transition-all group-data-[theme=light]:scale-100 group-data-[theme=light]:opacity-100"
 			name={"theme-light"}
 			aria-label="Set Light Theme"
@@ -49,15 +39,12 @@ const { order = 0 } = Astro.props;
 		if (typeof localStorage !== "undefined" && localStorage.getItem("theme")) {
 			return localStorage.getItem("theme");
 		}
-		return "system";
+		return "light";
 	};
 
 	const updateTheme = () => {
 		const theme = getThemePreference();
-		if (
-			theme === "dark" ||
-			(theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches)
-		) {
+		if (theme === "dark") {
 			document.documentElement.classList.add("dark");
 		} else {
 			document.documentElement.classList.remove("dark");
@@ -72,22 +59,14 @@ const { order = 0 } = Astro.props;
 
 	const handleToggleClick = () => {
 		const theme = getThemePreference();
-		let newTheme = "system";
+		let newTheme = "light";
 
-		if (theme === "system") newTheme = "light";
 		if (theme === "light") newTheme = "dark";
-		if (theme === "dark") newTheme = "system";
+		if (theme === "dark") newTheme = "light";
 
 		localStorage.setItem("theme", newTheme);
 		updateTheme();
 	};
 
 	document.getElementById("themeToggle").addEventListener("click", handleToggleClick);
-
-	// Listen for system theme changes
-	window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", () => {
-		if (getThemePreference() === "system") {
-			updateTheme();
-		}
-	});
 </script>
