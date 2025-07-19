@@ -65,6 +65,7 @@ export const FULL_PREVIEW_COLLECTIONS = key_value_from_json["full-preview-collec
 export const HIDE_UNDERSCORE_SLUGS_IN_LISTS =
 	key_value_from_json["hide-underscore-slugs-in-lists"] || false;
 
+// 主页Home标识符
 export const HOME_PAGE_SLUG = key_value_from_json["home-page-slug"] || "home";
 export const ALL_FOOTNOTES_PAGE_SLUG = key_value_from_json["all-footnotes-page-slug"] || null;
 

@@ -1,66 +1,66 @@
 import fs from "node:fs";
-import axios from "axios";
 import type { AxiosResponse } from "axios";
+import axios from "axios";
 import sharp from "sharp";
 import retry from "async-retry";
 import ExifTransformer from "exif-be-gone";
 import pngToIco from "png-to-ico";
 import path from "path";
 import {
-	NOTION_API_SECRET,
-	DATABASE_ID,
-	MENU_PAGES_COLLECTION,
-	OPTIMIZE_IMAGES,
-	LAST_BUILD_TIME,
-	HIDE_UNDERSCORE_SLUGS_IN_LISTS,
 	BUILD_FOLDER_PATHS,
+	DATABASE_ID,
+	HIDE_UNDERSCORE_SLUGS_IN_LISTS,
+	LAST_BUILD_TIME,
+	MENU_PAGES_COLLECTION,
+	NOTION_API_SECRET,
+	OPTIMIZE_IMAGES,
 } from "../../constants";
 import type * as responses from "@/lib/notion/responses";
 import type * as requestParams from "@/lib/notion/request-params";
 import type {
-	Database,
-	Post,
+	Annotation,
 	Block,
-	Paragraph,
+	Bookmark,
+	BulletedListItem,
+	Callout,
+	Code,
+	Column,
+	ColumnList,
+	Database,
+	Embed,
+	Emoji,
+	Equation,
+	File,
+	FileObject,
 	Heading1,
 	Heading2,
 	Heading3,
-	BulletedListItem,
-	NumberedListItem,
-	ToDo,
-	NImage,
-	Code,
-	Quote,
-	Equation,
-	Callout,
-	Embed,
-	Video,
-	File,
-	Bookmark,
 	LinkPreview,
+	LinkToPage,
+	Mention,
+	NAudio,
+	NImage,
+	NumberedListItem,
+	Paragraph,
+	Post,
+	Quote,
+	Reference,
+	ReferencesInPage,
+	RichText,
+	SelectProperty,
 	SyncedBlock,
 	SyncedFrom,
 	Table,
-	TableRow,
 	TableCell,
-	Toggle,
-	ColumnList,
-	Column,
 	TableOfContents,
-	RichText,
+	TableRow,
 	Text,
-	Annotation,
-	SelectProperty,
-	Emoji,
-	FileObject,
-	LinkToPage,
-	Mention,
-	Reference,
-	NAudio,
-	ReferencesInPage,
+	ToDo,
+	Toggle,
+	Video,
 } from "@/lib/interfaces";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import { Client, APIResponseError } from "@notionhq/client";
+import { APIResponseError, Client } from "@notionhq/client";
 import { getFormattedDateWithTime } from "../../utils/date";
 import { slugify } from "../../utils/slugify";
 import { extractReferencesInPage } from "../../lib/blog-helpers";
@@ -75,6 +75,7 @@ let dbCache: Database | null = null;
 let blockIdPostIdMap: { [key: string]: string } | null = null;
 
 const BUILDCACHE_DIR = BUILD_FOLDER_PATHS["buildcache"];
+
 // Generic function to save data to buildcache
 function saveBuildcache<T>(filename: string, data: T): void {
 	const filePath = path.join(BUILDCACHE_DIR, filename);
@@ -569,6 +570,7 @@ export function generateFilePath(url: URL, convertoWebp: boolean = false) {
 
 	return filepath;
 }
+
 export function isConvImageType(filepath: string) {
 	if (
 		filepath.includes(".png") ||
@@ -721,9 +723,6 @@ export async function processFileBlocks(fileAttachedBlocks: Block[]) {
 }
 
 export async function getDatabase(): Promise<Database> {
-	if (dbCache !== null) {
-		return Promise.resolve(dbCache);
-	}
 	const cacheDir = 'buildcache';
 	const dbPath = path.join(cacheDir, 'database.json');
 	// 确保目录存在
@@ -731,11 +730,9 @@ export async function getDatabase(): Promise<Database> {
 		fs.mkdirSync(cacheDir, { recursive: true });
 	}
 
-	// 如果文件不存在，创建一个空的 JSON 文件
-	if (!fs.existsSync(dbPath)) {
-		fs.writeFileSync(dbPath, '{}');
+	if (dbCache !== null) {
+		return Promise.resolve(dbCache);
 	}
-
 	dbCache = loadBuildcache<Database>("database.json");
 	if (dbCache) {
 		return dbCache;
