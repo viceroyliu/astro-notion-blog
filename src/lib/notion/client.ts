@@ -724,6 +724,18 @@ export async function getDatabase(): Promise<Database> {
 	if (dbCache !== null) {
 		return Promise.resolve(dbCache);
 	}
+	const cacheDir = 'buildcache';
+	const dbPath = path.join(cacheDir, 'database.json');
+	// 确保目录存在
+	if (!fs.existsSync(cacheDir)) {
+		fs.mkdirSync(cacheDir, { recursive: true });
+	}
+
+	// 如果文件不存在，创建一个空的 JSON 文件
+	if (!fs.existsSync(dbPath)) {
+		fs.writeFileSync(dbPath, '{}');
+	}
+
 	dbCache = loadBuildcache<Database>("database.json");
 	if (dbCache) {
 		return dbCache;
