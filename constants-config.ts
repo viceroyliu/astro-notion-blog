@@ -26,8 +26,19 @@ const config = {
 
 	// 社交媒体链接配置
 	"socials": {
-		"email": "",                         // 电子邮箱地址
-		"github": "",                        // GitHub 用户名
+		"email": {
+			"name": "邮箱",
+			"value": "wsrf.liu@qq.com"
+		},
+		"wechat": {
+			"name": "微信",
+			"value": "799860797"
+		},
+		"qq": {
+			"name": "QQ",
+			"value": "799860797"
+		},
+		"github": "https://github.com/viceroyliu",                        // GitHub
 		"googlescholar": "",                 // Google Scholar 个人主页 ID
 		"semanticscholar": "",               // Semantic Scholar 个人主页 ID
 		"dblp": "",                          // DBLP 计算机科学文献库个人主页
@@ -48,7 +59,21 @@ const config = {
 
 	// 基础路径 - 如果网站部署在子目录下使用 (例如: /blog)
 	"base-path": "",
-
+	// waline 评论系统配置
+	"waline": {
+		"serverURL": "https://waline-comment.iojun.com",
+		"lang": "zh-CN",
+		"locale": {
+			"placeholder": "欢迎留言讨论~"
+		},
+		"meta": ["nick", "mail"],
+		"requiredMeta": [],
+		"anonymous": true,
+		"pageview": true,
+		"comment": true,
+		"copyright": false,
+		"dark": "auto"
+	},
 	// Giscus 评论系统配置 (基于 GitHub Discussions)
 	"giscus": {
 		"data-repo": "viceroyliu/astro-notion-blog",       // GitHub 仓库名

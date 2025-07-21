@@ -2,120 +2,178 @@
 import Icon from "@/components/Icon.astro";
 import { getTextToSVGPath } from "@/lib/style-helpers";
 import { SOCIALS } from "@/constants";
-import type { SocialLink } from "@/types";
 
-const mapSocialLinks = (socialLinksObject: { [key: string]: string }): SocialLink[] => {
-	return Object.entries(socialLinksObject)
-		.map(([key, value]): SocialLink => {
-			let iconname = getTextToSVGPath(key) ? key : "web";
-			// let iconname = getTextToIconName(key) ? getTextToIconName(key) : "mdi:web";
-			if (key === "email") {
-				return {
-					name: iconname,
-					friendlyName: key.charAt(0).toUpperCase() + key.slice(1),
-					link: value.startsWith("mailto:") ? value.replace("mailto:", "") : value,
-					isWebmention: true,
-				};
-			}
+// 类型定义
+type SocialValue = string | {
+	name?: string;
+	value: string;
+};
 
-			return {
-				name: iconname,
-				friendlyName: key.charAt(0).toUpperCase() + key.slice(1),
-				link: value,
-			};
-		})
-		.filter((link) => link.link);
+interface SocialLink {
+	name: string;
+	friendlyName: string;
+	displayName?: string;
+	link: string;
+	isWebmention?: boolean;
+	isUrl: boolean;
+}
+
+// 判断是否为URL的辅助函数
+const isValidUrl = (string: string): boolean => {
+  try {
+    new URL(string);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+const mapSocialLinks = (socialLinksObject: { [key: string]: SocialValue }): SocialLink[] => {
+  return Object.entries(socialLinksObject)
+    .map(([key, value]): SocialLink => {
+      let link: string;
+      let displayName: string | undefined;
+
+      // 处理新的对象格式和旧的字符串格式
+      if (typeof value === "object" && value !== null) {
+        link = value.value;
+        displayName = value.name;
+      } else {
+        link = value;
+      }
+
+      // 使用原来的逻辑：如果找不到对应图标就用 "web"
+      let iconname = getTextToSVGPath(key) ? key : "web";
+
+      // 判断是否为URL
+      const isUrl = isValidUrl(link);
+
+      // 处理email特殊情况
+      if (key.toLowerCase() === "email" && link.startsWith("mailto:")) {
+        link = link.replace("mailto:", "");
+      }
+
+      return {
+        name: iconname,
+        friendlyName: key.charAt(0).toUpperCase() + key.slice(1),
+        displayName: displayName,
+        link: link,
+        isWebmention: key.toLowerCase() === "email",
+        isUrl: isUrl,
+      };
+    })
+    .filter((link) => link.link);
 };
 
 const socialLinks = mapSocialLinks(SOCIALS);
 ---
 
 <script>
-	function copyToClipboard(text) {
-		navigator.clipboard
-			.writeText(text)
-			.then(() => {
-				const toast = document.getElementById("toast");
-				toast.classList.remove("opacity-0");
-				toast.classList.add("opacity-100");
-				setTimeout(() => {
-					toast.classList.remove("opacity-100");
-					toast.classList.add("opacity-0");
-				}, 3000);
-			})
-			.catch((err) => {
-				console.error("Could not copy text: ", err);
-			});
-	}
+  function copyToClipboard(text: string, displayName?: string, friendlyName?: string) {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        const toast = document.getElementById("toast");
+        const toastText = document.getElementById("toast-text");
 
-	function handleEmailClick(event, email) {
-		event.preventDefault();
-		copyToClipboard(email);
-	}
+        let nameToShow = displayName || friendlyName || "内容";
+        let toastMessage = `${nameToShow}已复制到剪贴板`;
 
-	document.addEventListener("DOMContentLoaded", () => {
-		const emailLinks = document.querySelectorAll(".email-link");
-		emailLinks.forEach((link) => {
-			link.addEventListener("click", (event) => {
-				const email = link.getAttribute("data-email");
-				handleEmailClick(event, email);
-			});
-		});
-	});
+        if (toastText) {
+          toastText.textContent = toastMessage;
+        }
+
+        if (toast) {
+          toast.classList.remove("opacity-0");
+          toast.classList.add("opacity-100");
+          setTimeout(() => {
+            toast.classList.remove("opacity-100");
+            toast.classList.add("opacity-0");
+          }, 3000);
+        }
+      })
+      .catch((err) => {
+        console.error("无法复制文本: ", err);
+      });
+  }
+
+  function handleCopyClick(event: Event, text: string, displayName?: string, friendlyName?: string) {
+    event.preventDefault();
+    copyToClipboard(text, displayName, friendlyName);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const copyLinks = document.querySelectorAll(".copy-link");
+    copyLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const text = link.getAttribute("data-copy-text");
+        const displayName = link.getAttribute("data-display-name");
+        const friendlyName = link.getAttribute("data-friendly-name");
+
+        if (text) {
+          handleCopyClick(event, text, displayName || undefined, friendlyName || undefined);
+        }
+      });
+    });
+  });
 </script>
 
 {
-	socialLinks && socialLinks.length > 0 && (
-		<>
-			<div class="flex flex-wrap items-center gap-x-4 print:hidden">
-				<p>Find me on</p>
-				<ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
-					{socialLinks.map(({ link, name, friendlyName, isWebmention }) => (
-						<li class="flex">
-							{friendlyName === "Email" ? (
-								<a
-									class="email-link sm:hover:text-link inline-block p-1"
-									href="#"
-									data-email={link}
-									rel={`noopener noreferrer ${isWebmention ? "me authn" : ""}`}
-								>
-									<Icon class="h-6 w-6" name={name} aria-label={friendlyName} focusable="false" />
-									<span class="sr-only">{friendlyName}</span>
-								</a>
-							) : (
-								<a
-									class="sm:hover:text-link inline-block p-1"
-									href={link}
-									target="_blank"
-									rel={`noopener noreferrer ${isWebmention ? "me authn" : ""}`}
-								>
-									<Icon class="h-6 w-6" name={name} aria-label={friendlyName} focusable="false" />
-									<span class="sr-only">{friendlyName}</span>
-								</a>
-							)}
-						</li>
-					))}
-				</ul>
-			</div>
-			<div
-				id="toast"
-				class="fixed bottom-8 left-1/2 -translate-x-1/2 transform rounded-sm bg-gray-800 px-4 py-2 text-center text-white opacity-0 transition-opacity duration-300"
-			>
-				Email copied to clipboard
-			</div>
-			<div class="hidden print:block print:w-full">
-				<hr class="mb-4" />
-				<p class="text-left font-bold">Find me on:</p>
-				<ul>
-					{socialLinks.map(({ link, name, friendlyName, isWebmention }) => (
-						<li class="flex">
-							<p class="text-left">
-								{friendlyName}: {link}
-							</p>
-						</li>
-					))}
-				</ul>
-			</div>
-		</>
-	)
+  socialLinks && socialLinks.length > 0 && (
+    <>
+      <div class="flex flex-wrap items-center gap-x-4 print:hidden">
+        <p>联系方式</p>
+        <ul class="flex flex-1 items-center gap-x-2 sm:flex-initial">
+          {socialLinks.map(({ link, name, friendlyName, displayName, isWebmention, isUrl }) => (
+            <li class="flex">
+              {!isUrl ? (
+                <a
+                  class="copy-link sm:hover:text-link inline-block p-1 cursor-pointer"
+                  href="#"
+                  data-copy-text={link}
+                  data-display-name={displayName}
+                  data-friendly-name={friendlyName}
+                  rel={`noopener noreferrer ${isWebmention ? "me authn" : ""}`}
+                  title={`复制${displayName || friendlyName}`}
+                >
+                  <Icon class="h-6 w-6" name={name} aria-label={displayName || friendlyName} focusable="false" />
+                  <span class="sr-only">{displayName || friendlyName}</span>
+                </a>
+              ) : (
+                <a
+                  class="sm:hover:text-link inline-block p-1"
+                  href={link}
+                  target="_blank"
+                  rel={`noopener noreferrer ${isWebmention ? "me authn" : ""}`}
+                  title={`访问${displayName || friendlyName}`}
+                >
+                  <Icon class="h-6 w-6" name={name} aria-label={displayName || friendlyName} focusable="false" />
+                  <span class="sr-only">{displayName || friendlyName}</span>
+                </a>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div
+        id="toast"
+        class="fixed bottom-8 left-1/2 -translate-x-1/2 transform rounded-sm bg-gray-800 px-4 py-2 text-center text-white opacity-0 transition-opacity duration-300"
+      >
+        <span id="toast-text">内容已复制到剪贴板</span>
+      </div>
+      <div class="hidden print:block print:w-full">
+        <hr class="mb-4" />
+        <p class="text-left font-bold">联系方式:</p>
+        <ul>
+          {socialLinks.map(({ link, friendlyName, displayName }) => (
+            <li class="flex">
+              <p class="text-left">
+                {displayName || friendlyName}: {link}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
+  )
 }

@@ -108,6 +108,8 @@ export const SOCIALS = key_value_from_json["socials"] || {};
 
 export const GISCUS = key_value_from_json["giscus"] || null;
 
+export const WALINE = key_value_from_json["waline"] || null;
+
 export const BLUESKY_COMM = key_value_from_json["bluesky-comments"] || {};
 
 export const THEME = key_value_from_json["theme"] || {};
