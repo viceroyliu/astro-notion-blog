@@ -11,19 +11,18 @@ const dateOptions = {
 
 const dateFormat = new Intl.DateTimeFormat(dateOptions.date.locale, dateOptions.date.options);
 
-export function getFormattedDate(
-	date: string | number | Date,
-	options?: Intl.DateTimeFormatOptions,
-) {
-	//console.log("DATE: ", date);
-	if (typeof options !== "undefined") {
-		return new Date(date).toLocaleDateString(dateOptions.date.locale, {
-			...(dateOptions.date.options as Intl.DateTimeFormatOptions),
-			...options,
-		});
+export function getFormattedDate(date: Date, options?: Intl.DateTimeFormatOptions): string {
+	// 如果没有传入选项，使用默认的年月日格式
+	if (!options) {
+		const year = date.getFullYear();
+		const month = String(date.getMonth() + 1).padStart(2, "0");
+		const day = String(date.getDate()).padStart(2, "0");
+
+		return `${year}-${month}-${day}`;
 	}
 
-	return dateFormat.format(new Date(date));
+	// 如果传入了选项，使用传入的选项
+	return date.toLocaleDateString("zh-CN", options);
 }
 
 export function getFormattedDateWithTime(date: string | number | Date) {

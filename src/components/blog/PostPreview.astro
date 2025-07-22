@@ -19,8 +19,6 @@ interface Props {
 const { post, as: Tag = "div", withDesc = false } = Astro.props;
 const postLink = getPostLink(post.Slug, post.Collection === MENU_PAGES_COLLECTION);
 ---
-
-<FormattedDate date={new Date(post.Date)} class="text-accent/90 min-w-[120px] text-xs" />
 <Tag>
 	{
 		post.Pinned && (
@@ -39,6 +37,7 @@ const postLink = getPostLink(post.Slug, post.Collection === MENU_PAGES_COLLECTIO
 	</a>
 </Tag>
 {withDesc && post.Excerpt && <q class="line-clamp-3 block italic">{post.Excerpt}</q>}
+<FormattedDate date={new Date(post.Date)} class="text-accent/90 min-w-[120px] text-sm" />
 {
 	post.Tags && post.Tags.length > 0 && (
 		<div class="mt-1">

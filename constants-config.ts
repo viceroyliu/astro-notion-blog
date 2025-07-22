@@ -66,35 +66,31 @@ const config = {
 		"locale": {
 			"placeholder": "欢迎留言讨论~"
 		},
-		"meta": ["nick", "mail"],
-		"requiredMeta": [],
-		"anonymous": true,
-		"pageview": true,
-		"comment": true,
-		"copyright": false,
-		"dark": "auto"
+		// 📊 统计功能
+		"pageview": true,                                 // 显示页面浏览量
+		"comment": true,                                  // 显示评论数量
+		// 🎨 外观设置
+		"copyright": false,		 														// 显示评论数量
+		"dark": "auto",				 														// 暗色模式：auto/true/false
+		"wordLimit": [4, 500],
+		"search": false,
+		// 👤 评论者信息字段
+		"meta": ["nick", "mail"],                         // 显示的字段：nick(昵称), mail(邮箱), link(网址)
+		"requiredMeta": ["nick"],                         // 必填字段：["nick"] 表示昵称必填
+		// 🖼️ 头像设置
+		"avatar": "mp",                                   // 头像类型：mp/identicon/monsterid等
+		"avatarCDN": "https://sdn.geekzu.org/avatar/",   // 头像CDN地址
+		"avatarForce": false,                             // 强制显示头像
+		// 🎯 高级功能
+		"highlight": true,                                // 代码高亮
+		"commentSorting": "latest",                       // 评论排序：latest/oldest/hottest
+		"reaction": false, 																// 用户对文章的反应（各种表情）
+		// 😊 表情
+		"emoji": [                                        // 表情包配置
+			'https://unpkg.com/@waline/emojis@1.2.0/qq',
+			'https://unpkg.com/@waline/emojis@1.2.0/tieba',
+		],
 	},
-	// Giscus 评论系统配置 (基于 GitHub Discussions)
-	"giscus": {
-		"data-repo": "viceroyliu/astro-notion-blog",       // GitHub 仓库名
-		"data-repo-id": "R_kgDOPOqXNg",                    // 仓库 ID
-		"data-category": "Announcements",                         // 讨论分类
-		"data-category-id": "DIC_kwDOPOqXNs4CtIQ8",       // 分类 ID
-		"data-mapping": "url",                         // 评论映射方式 (pathname/url/title等)
-		"data-input-position": "bottom",                       // 评论框位置 (top/bottom)
-		"data-reactions-enabled": true                      // 是否启用表情反应
-	},
-
-	// Bluesky 评论配置
-	"bluesky-comments": {
-		"show-comments-from-bluesky": false,               // 是否显示来自 Bluesky 的评论
-		"auto-search-for-match": {
-			"turn-on-auto-search": false,                    // 是否自动搜索匹配的帖子
-			"author": "",                                     // Bluesky 作者用户名
-			"echo-feed-emoji": ""                             // Echo feed 表情符号
-		}
-	},
-
 	// 引用和链接设置
 	"references": {
 		"site-links-in-page": true,                        // 显示页面内的站内链接
@@ -122,7 +118,7 @@ const config = {
 	},
 
 	// 是否在首页显示最近的文章
-	"recent-posts-on-home-page": false,
+	"recent-posts-on-home-page": true,
 
 	// 主题配置
 	"theme": {
