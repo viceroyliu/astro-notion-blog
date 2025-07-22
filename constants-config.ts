@@ -77,11 +77,11 @@ const config = {
 	// Giscus 评论系统配置 (基于 GitHub Discussions)
 	"giscus": {
 		"data-repo": "viceroyliu/astro-notion-blog",       // GitHub 仓库名
-		"data-repo-id": "R_kgDOK0FuUA",                    // 仓库 ID
-		"data-category": "General",                         // 讨论分类
-		"data-category-id": "DIC_kwDOK0FuUM4CbZ5A",       // 分类 ID
-		"data-mapping": "pathname",                         // 评论映射方式 (pathname/url/title等)
-		"data-input-position": "top",                       // 评论框位置 (top/bottom)
+		"data-repo-id": "R_kgDOPOqXNg",                    // 仓库 ID
+		"data-category": "Announcements",                         // 讨论分类
+		"data-category-id": "DIC_kwDOPOqXNs4CtIQ8",       // 分类 ID
+		"data-mapping": "url",                         // 评论映射方式 (pathname/url/title等)
+		"data-input-position": "bottom",                       // 评论框位置 (top/bottom)
 		"data-reactions-enabled": true                      // 是否启用表情反应
 	},
 
