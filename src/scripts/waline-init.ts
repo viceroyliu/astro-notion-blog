@@ -1,3 +1,10 @@
+// eslint-disable-next-line no-undef
+(window as any).__VUE_OPTIONS_API__ = true;
+// eslint-disable-next-line no-undef
+(window as any).__VUE_PROD_DEVTOOLS__ = false;
+// eslint-disable-next-line no-undef
+(window as any).__VUE_PROD_HYDRATION_MISMATCH_DETAILS__ = false;
+
 import { init } from "@waline/client";
 import "@waline/client/style";
 import type { WalineInitOptions } from "@waline/client";

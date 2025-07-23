@@ -1,5 +1,7 @@
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+// import react from "@astrojs/react";
+import vue from "@astrojs/vue";
 
 import path from "path";
 import { CUSTOM_DOMAIN, BASE_PATH } from "./src/constants";
@@ -75,6 +77,8 @@ export default defineConfig({
 		? modifyRedirectPaths(key_value_from_json["redirects"], process.env.BASE || BASE_PATH)
 		: {},
 	integrations: [
+		vue(),
+		// react(),
 		createFoldersIfMissing(),
 		buildTimestampRecorder(),
 		EntryCacheEr(),
@@ -105,6 +109,9 @@ export default defineConfig({
 		},
 		define: {
 			NOTION_API_SECRET: process.env.NOTION_API_SECRET,
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: false,
+			__VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false,
 		},
 	},
 });
