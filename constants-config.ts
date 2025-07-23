@@ -34,10 +34,7 @@ const config = {
 			"name": "微信",
 			"value": "799860797"
 		},
-		"qq": {
-			"name": "QQ",
-			"value": "799860797"
-		},
+		"qq":	"",
 		"github": "https://github.com/viceroyliu",                        // GitHub
 		"googlescholar": "",                 // Google Scholar 个人主页 ID
 		"semanticscholar": "",               // Semantic Scholar 个人主页 ID
@@ -124,29 +121,29 @@ const config = {
 	"theme": {
 		// 颜色配置 (使用 RGB 值)
 		"colors": {
-			"bg": {                                          // 背景色
-				"light": "249 249 249",                        // 浅色模式背景
-				"dark": "28 30 32"                             // 深色模式背景
+			"bg": {
+				"light": "249 249 249",
+				"dark": "42 46 47"
 			},
-			"text": {                                        // 文本颜色
-				"light": "34 39 42",                           // 浅色模式文本
-				"dark": "255 255 255"                          // 深色模式文本
+			"text": {
+				"light": "30 49 59",
+				"dark": "236 236 236"
 			},
-			"link": {                                        // 链接颜色
-				"light": "85 123 118",                         // 浅色模式链接
-				"dark": "199 200 203"                          // 深色模式链接
+			"link": {
+				"light": "98 116 142",
+				"dark": "250 143 72"
 			},
-			"accent": {                                      // 主要强调色
-				"light": "203 41 65",                          // 浅色模式强调色
-				"dark": "41 188 136"                           // 深色模式强调色
+			"accent": {
+				"light": "182 57 57",
+				"dark": "237 237 237"
 			},
-			"accent-2": {                                    // 次要强调色
-				"light": "17 17 17",                           // 浅色模式次要强调色
-				"dark": "237 237 237"                          // 深色模式次要强调色
+			"accent-2": {
+				"light": "66 56 56",
+				"dark": "204 108 65"
 			},
-			"quote": {                                       // 引用文本颜色
-				"light": "203 41 65",                          // 浅色模式引用色
-				"dark": "205 254 183"                          // 深色模式引用色
+			"quote": {
+				"light": "203 41 65",
+				"dark": "205 254 183"
 			}
 		},
 		// Google 字体配置

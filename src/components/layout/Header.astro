@@ -74,12 +74,14 @@ const rss_path = getNavLink("/rss.xml");
 				menuLinks.map((link) => (
 					<a
 						href={link.path}
-						class="w-full px-4 py-4 text-right sm:w-auto sm:py-0 sm:text-left sm:hover:underline sm:hover:decoration-accent sm:hover:decoration-solid sm:hover:decoration-2 sm:hover:underline-offset-6"
+						class="font-medium w-full px-4 py-4 text-right sm:w-auto sm:py-0 sm:text-left sm:hover:underline sm:hover:decoration-accent sm:hover:decoration-solid sm:hover:decoration-2 sm:hover:underline-offset-6"
 						aria-current={url.pathname === link.path ? "page" : false}
 						data-astro-prefetch
 					>
 						{link.title}
 					</a>
+
+
 				))
 			}
 		</nav>

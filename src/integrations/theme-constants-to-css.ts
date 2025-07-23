@@ -280,9 +280,18 @@ ${createCssVariables("dark")}
 }
 
 @layer components {
-  .site-page-link {
-    @apply underline decoration-wavy decoration-from-font decoration-accent-2/20 hover:decoration-accent-2/40 underline-offset-2 hover:underline;
-  }
+	.site-page-link {
+		@apply text-xl font-semibold no-underline
+		transition-all duration-300 ease-in-out
+		block py-2;
+
+		color: var(--theme-text);
+	}
+
+	.site-page-link:hover {
+		color: var(--theme-accent);
+		transform: translateX(5px) scale(1.02);
+	}
 
   .title {
     @apply text-3xl font-bold text-accent-2;

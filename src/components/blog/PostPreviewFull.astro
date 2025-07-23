@@ -97,11 +97,6 @@ const postLink = getPostLink(
 );
 ---
 
-<FormattedDate
-	date={new Date(post_full_preview.Date)}
-	class="text-accent/90 min-w-[120px] text-xs"
-/>
-
 <Tag class="font-bold">
 	{
 		post_full_preview.Pinned && (
@@ -124,6 +119,11 @@ const postLink = getPostLink(
 		<q class="line-clamp-3 block italic">{post_full_preview.Excerpt}</q>
 	)
 }
+
+<FormattedDate
+	date={new Date(post_full_preview.Date)}
+	class="text-accent/90 min-w-[120px] text-xs"
+/>
 
 {
 	post_full_preview.Tags && post_full_preview.Tags.length > 0 && (

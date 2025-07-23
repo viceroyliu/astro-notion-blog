@@ -16,7 +16,9 @@ const { post } = Astro.props;
 // const { remarkPluginFrontmatter } = await render();
 
 const dateTimeOptions: Intl.DateTimeFormatOptions = {
-	month: "long",
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit"
 };
 ---
 
@@ -25,13 +27,13 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 </h1>
 {post.Excerpt && <q class="mb-2 block italic">{post.Excerpt}</q>}
 <div class="flex max-w-full flex-wrap items-center gap-x-3 gap-y-2">
-	<p class="font-semibold">
+	<p>
 		<FormattedDate date={new Date(post.Date)} dateTimeOptions={dateTimeOptions} />
 	</p>
 	{
 		post.Date && post.LastUpdatedDate && areDifferentDates(post.Date, post.LastUpdatedDate) && (
 			<span class="bg-quote/10 text-quote rounded-lg p-1">
-				{"Last Updated:"}
+				{"更新日期:"}
 				<FormattedDate
 					class="ms-1"
 					date={new Date(post.LastUpdatedDate)}
@@ -68,4 +70,5 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 		</div>
 	)
 }
-<hr class="divider bg-accent/30 mx-auto my-4 h-1 w-full rounded-sm border-none" />
+<!--<hr class="divider bg-accent/30 mx-auto my-4 h-1 w-full rounded-sm border-none" />-->
+<hr class="divider bg-accent-2/10 mx-auto my-4 h-1 w-full rounded-sm border-none" />

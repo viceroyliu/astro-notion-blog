@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 import path from "path";
 import { CUSTOM_DOMAIN, BASE_PATH } from "./src/constants";
+
 const getSite = function () {
 	if (CUSTOM_DOMAIN) {
 		return new URL(BASE_PATH, `https://${CUSTOM_DOMAIN}`).toString();
@@ -101,6 +102,9 @@ export default defineConfig({
 		plugins: [tailwindcss()],
 		optimizeDeps: {
 			exclude: ["@resvg/resvg-js"],
+		},
+		define: {
+			NOTION_API_SECRET: process.env.NOTION_API_SECRET,
 		},
 	},
 });
