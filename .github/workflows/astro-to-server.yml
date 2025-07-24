@@ -1,0 +1,112 @@
+name: Build and Deploy Astro Blog to Server
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 */8 * * *"
+  workflow_dispatch:
+
+env:
+  BUILD_PATH: "."
+  NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: github-pages  # 👈 关键：指定环境
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 21
+
+      # 缓存 node_modules
+      - name: Restore Node Modules Cache
+        id: npm-cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles(format('{0}/package-lock.json', env.BUILD_PATH)) }}
+
+      - name: Install dependencies
+        if: steps.npm-cache-restore.outputs.cache-hit != 'true'
+        run: npm ci --ignore-scripts
+        working-directory: ${{ env.BUILD_PATH }}
+
+      # 缓存 tmp 和 public（参考你原来的逻辑）
+      - name: Restore Cached `tmp`
+        id: cache-tmp-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ./tmp
+          key: tmp-webtrotion-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: tmp-webtrotion-${{ github.repository_id }}-
+
+      - name: Restore Cached `public`
+        id: cache-public-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: ./public
+          key: public-webtrotion-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: public-webtrotion-${{ github.repository_id }}-
+
+      # 检查 NOTION_API_SECRET 是否正确注入
+      - name: Debug NOTION_API_SECRET
+        env:
+          NOTION_API_SECRET: ${{ env.NOTION_API_SECRET }}
+        run: |
+          echo "NOTION_API_SECRET length: $(echo -n "$NOTION_API_SECRET" | wc -c)"
+          if [ -z "$NOTION_API_SECRET" ]; then
+            echo "❌ NOTION_API_SECRET is empty!"
+            exit 1
+          else
+            echo "✅ NOTION_API_SECRET is set"
+          fi
+
+      # 构建（完全参考你成功的配置）
+      - name: Build with Astro and postbuild for pagefind
+        env:
+          NOTION_API_SECRET: ${{ env.NOTION_API_SECRET }}
+        run: |
+          echo "NOTION_API_SECRET = $NOTION_API_SECRET"
+          npx --no-install astro build
+          npx --no-install pagefind --site dist
+        working-directory: ${{ env.BUILD_PATH }}
+
+      # 保存缓存
+      - name: Save node cache manually
+        if: steps.npm-cache-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles(format('{0}/package-lock.json', env.BUILD_PATH)) }}
+
+      - name: Save New `tmp` Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ./tmp
+          key: tmp-webtrotion-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      - name: Save New `public` Cache
+        uses: actions/cache/save@v4
+        with:
+          path: ./public
+          key: public-webtrotion-${{ github.repository_id }}-${{ github.run_id }}-${{ github.run_attempt }}
+
+      # 部署到服务器
+      - name: Deploy to Server via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          source: "dist/*"
+          target: ${{ secrets.DEPLOY_PATH }}
+          strip_components: 1
