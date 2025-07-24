@@ -17,6 +17,7 @@ NOTION_API_SECRET=ntn_68***********ERyFzJVYL7cP
 ```
 同时本地打包的命令用`npm run build-local`，然后用`npm run preview`去预览打包。
 命令`npm run build`是留给github上自动构建action用的。
+(如果非要用，需要手动构建环境`export NOTION_API_SECRET=ntn_68***********ERyFzJVYL7cP`，然后再去run build)
 ### 注意事项
 项目需要先`npm run build`一下，才会生成style文件，然后再`npm run dev`进行开发
 (原因：样式是通过constants-config.ts配置自动生成。如果实在想改，可以先在style/global.css中添加调试，确认好了，再添加到src/integrations/theme-constants-to-css.ts文件中)
