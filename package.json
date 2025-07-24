@@ -15,7 +15,7 @@
 		"prebuild-local": "rm -rf buildcache && for folder in blocks-html-cache rss-cache; do if [ -d \"./tmp/$folder\" ]; then echo \"Deleting $folder folder\"; rm -rf \"./tmp/$folder\"; else echo \"No $folder folder to delete\"; fi; done",
 		"build-local": "dotenv -e .env -- astro build",
 		"start": "astro dev",
-		"build": "rm -rf buildcache && dotenv -e .env -- astro build",
+		"build": "rm -rf buildcache && astro build",
 		"postbuild": "pagefind --site dist",
 		"preview": "astro preview",
 		"format": "prettier -w --cache .",
