@@ -1,7 +1,3 @@
-name: astro.yml
-on:
-
-jobs:
 name: Deploy to GitHub Pages
 
 on:
