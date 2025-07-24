@@ -52,7 +52,7 @@ const config = {
 	},
 
 	// 自定义域名 - 如果你有自己的域名，在这里填写 (例如: example.com)
-	"custom-domain": "",
+	"custom-domain": "www.iojun.com",
 
 	// 基础路径 - 如果网站部署在子目录下使用 (例如: /blog)
 	"base-path": "",
