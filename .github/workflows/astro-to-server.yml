@@ -17,7 +17,7 @@ jobs:
     timeout-minutes: 45
 
     steps:
-      - name: Checkout code
+      - name: Checkout your repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
@@ -25,9 +25,19 @@ jobs:
         with:
           node-version: 21
 
+      # Node_modules 缓存，加速构建
+      - name: Restore Node Modules Cache
+        uses: actions/cache@v4
+        with:
+          path: ./node_modules
+          key: modules-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            modules-
+
       - name: Install dependencies
         run: npm ci --ignore-scripts
 
+      # Astro Build 依赖 Notion API Secret。务必从 env 读取（不推荐用 dotenv 指令）
       - name: Build Astro site
         env:
           NOTION_API_SECRET: ${{ env.NOTION_API_SECRET }}
@@ -35,15 +45,31 @@ jobs:
           npx --no-install astro build
           npx --no-install pagefind --site dist
 
-      # 重要：上传到服务器
-      - name: Deploy to Alibaba Cloud via SCP
+      # 缓存 tmp、public（可选：亦可省略）
+      - name: Save New `tmp` Cache
+        uses: actions/cache@v4
+        with:
+          path: ./tmp
+          key: tmp-webtrotion-${{ github.run_id }}
+
+      - name: Save New `public` Cache
+        uses: actions/cache@v4
+        with:
+          path: ./public
+          key: public-webtrotion-${{ github.run_id }}
+
+      # 可选: 简单校验 Secret 是否被成功注入（安全echo，勿泄露关键信息）
+      - name: Check NOTION_API_SECRET length
+        run: echo "${NOTION_API_SECRET}" | wc -c
+
+      # 核心步骤：将 dist 文件夹上传到你的阿里云
+      - name: Deploy to Server via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          # 下面source/target配合用就行
           source: "dist/*"
           target: ${{ secrets.DEPLOY_PATH }}
           strip_components: 1
